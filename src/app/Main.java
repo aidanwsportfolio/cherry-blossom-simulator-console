@@ -4,6 +4,12 @@ import java.util.Scanner;
 
 public class Main {
     private static final Scanner in = new Scanner(System.in);
+    private static final boolean ENABLE_COLOR = true;
+    private static final String RESET = "\u001B[0m";
+    private static final String PINK  = "\u001B[38;5;212m";
+    private static final String CYAN  = "\u001B[36m";
+    private static final String GRAY  = "\u001B[90m";
+
 
     public static void main(String[] args) {
         Simulation sim = new Simulation();
@@ -34,7 +40,10 @@ public class Main {
                     printFinal(sim);
                     running = false;
                 }
+                case "10" -> saveSummary(sim);
                 default -> System.out.println("Please choose 1–9.");
+                
+            
             }
         }
 
@@ -53,6 +62,11 @@ public class Main {
         System.out.println(" 8) Auto-cycle seasons");
         System.out.println(" 9) Quit");
         System.out.print("Choose: ");
+        System.out.println(" 8) Auto-cycle seasons");
+        System.out.println(" 9) Quit");
+        System.out.println("10) Save run summary to file");
+
+
     }
 
     private static void printStatus(Simulation s) {
@@ -63,14 +77,30 @@ public class Main {
         );
 
         drawBar(s.getBlossoms(), 60);
+
+        private static void drawTreeTiny(int blossoms) {
+        System.out.println("   /\\");
+        System.out.println("  /**\\     ~ Blossoms: " + blossoms);
+        System.out.println(" /****\\");
+        System.out.println("   ||");
+}
+
     }
 
     private static void drawBar(int value, int width) {
-        int capped = Math.min(value, 500);
-        int filled = (int) Math.round((capped / 500.0) * width);
-        String bar = "[" + "#".repeat(filled) + " ".repeat(width - filled) + "]";
+    int capped = Math.min(value, 500);
+    int filled = (int) Math.round((capped / 500.0) * width);
+    String hashes = "#".repeat(Math.max(0, filled));
+    String spaces = " ".repeat(Math.max(0, width - filled));
+    String bar = "[" + hashes + spaces + "]";
+    if (ENABLE_COLOR) {
+        String color = (filled > width * 0.6) ? PINK : (filled > width * 0.3 ? CYAN : GRAY);
+        System.out.println("Blossoms " + color + bar + RESET + " " + capped);
+    } else {
         System.out.println("Blossoms " + bar + " " + capped);
     }
+}
+
 
     private static void runDays(Simulation s, int days, boolean show) {
         for (int i = 0; i < days; i++) {
@@ -140,4 +170,24 @@ public class Main {
         System.out.println("Total petals fallen: " + s.getTotalPetalsFallen());
         System.out.println("=======================\n");
     }
+    
+    private static void saveSummary(Simulation s) {
+        String filename = "run-summary-" + System.currentTimeMillis() + ".txt";
+        String content = """
+            Cherry Blossom Simulator — Run Summary
+            =====================================
+            Days simulated: %d
+            Peak blossoms : %d (day %d)
+            Total petals fallen: %d
+            """.formatted(
+                s.getDay(), s.getPeakBlossoms(), s.getPeakDay(), s.getTotalPetalsFallen()
+        );
+        try {
+            java.nio.file.Files.writeString(java.nio.file.Path.of(filename), content);
+            System.out.println("Saved " + filename);
+        } catch (Exception e) {
+            System.out.println("Failed to save: " + e.getMessage());
+        }
+    }
+
 }
