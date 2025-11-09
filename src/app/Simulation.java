@@ -3,7 +3,7 @@ package app;
 import java.util.Random;
 
 public class Simulation {
-    private final Random rng = new Random();
+    private final Random rng = new Random(); //randomizes every run for realism
 
     private Season season = Season.WINTER;
     private int day = 0;               // day counter
@@ -16,9 +16,9 @@ public class Simulation {
     private int temperatureC = 5;      // -10 .. 30 typical
     private int wind = 0;              // 0 .. 10 arbitrary units
 
-    // tuning
+    // tuning max blossoms to avoid console freezing
     private final int MAX_BLOSSOMS = 4500;
-
+    //set variables values and their return values
     public void setSeason(Season s) { this.season = s; }
     public Season getSeason() { return season; }
     public int getDay() { return day; }
@@ -30,21 +30,21 @@ public class Simulation {
     public int getTotalPetalsFallen() { return totalPetalsFallen; }
 
     public void setTemperatureC(int t) { this.temperatureC = t; }
-    public void setWind(int w) { this.wind = Math.max(0, Math.min(10, w)); }
+    public void setWind(int w) { this.wind = Math.max(0, Math.min(10, w)); } //Protects against invalid input (e.g., negative wind, or wind > 10)
 
     public void randomizeWeather() {
         // season-based temperature swings
-        int baseT = switch (season) {
+        int baseT = switch (season) { //enhanced switch statement so each case provides a value and avoids break
             case WINTER -> -2;
             case SPRING -> 14;
             case SUMMER -> 26;
             case FALL   -> 12;
         };
-        temperatureC = baseT + rng.nextInt(7) - 3; // ±3 variation
+        temperatureC = baseT + rng.nextInt(7) - 3; // ±3 variation for realism effect
         wind = rng.nextInt(6); // 0..5 wind
     }
 
-    public void stepDay() {
+    public void stepDay() { //move simulation ahead by 1 day
         day++;
 
         boolean spring = (season == Season.SPRING);
@@ -71,7 +71,7 @@ public class Simulation {
         int before = blossoms;
         blossoms = Math.max(0, Math.min(MAX_BLOSSOMS, blossoms + growth - decay));
         totalPetalsFallen += Math.max(0, before - blossoms);
-
+        //updates the max if it's "passed" 
         if (blossoms > peakBlossoms) {
             peakBlossoms = blossoms;
             peakDay = day;
