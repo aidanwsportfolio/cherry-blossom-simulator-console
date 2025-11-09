@@ -3,7 +3,7 @@ package app;
 import java.util.Random;
 
 public class Simulation {
-    private final Random rng = new Random(1337);
+    private final Random rng = new Random();
 
     private Season season = Season.WINTER;
     private int day = 0;               // day counter
