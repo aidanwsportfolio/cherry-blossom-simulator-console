@@ -13,7 +13,7 @@ public class Main {
 
     public static void main(String[] args) {
         Simulation sim = new Simulation();
-        System.out.println("\n🌸 Cherry Blossom Simulator (Console Edition) — One-Night MVP\n");
+        System.out.println("\n🌸 Cherry Blossom Simulator 🌸\n");
 
         boolean running = true;
         while (running) {
