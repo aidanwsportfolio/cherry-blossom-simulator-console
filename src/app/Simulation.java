@@ -17,7 +17,7 @@ public class Simulation {
     private int wind = 0;              // 0 .. 10 arbitrary units
 
     // tuning
-    private final int MAX_BLOSSOMS = 500;
+    private final int MAX_BLOSSOMS = 4500;
 
     public void setSeason(Season s) { this.season = s; }
     public Season getSeason() { return season; }
